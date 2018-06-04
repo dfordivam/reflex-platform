@@ -7,22 +7,6 @@ self: super: {
     rev = "6cc95ebb07c07001666d84ace5c13caefaaa0cad";
     sha256 = "1zplzy9mfpwjrk5l22gmla1vmk7wmwmgmjfk64b57ysn7madlv19";
   }) {};
-  jsaddle = haskellLib.overrideCabal super.jsaddle (drv: {
-    patches = (drv.patches or []) ++ [
-      ./jsaddle-text-jsstring.patch
-    ];
-    buildDepends = (drv.buildDepends or []) ++ [
-      self.ghcjs-json
-      self.ghcjs-base
-      self.ghcjs-prim
-    ];
-  });
-  ghcjs-json = self.callCabal2nix "ghcjs-json" (fetchFromGitHub {
-    owner = "obsidiansystems";
-    repo = "ghcjs-json";
-    rev = "3a6e1e949aced800d32e0683a107f5387295f3a6";
-    sha256 = "1pjsvyvy6ac3358db19iwgbmsmm0si2hzh2ja1hclq43q6d80yij";
-  }) {};
   ghcjs-base = haskellLib.overrideCabal super.ghcjs-base (drv: {
     src = fetchFromGitHub {
       owner = "luigy";
@@ -54,10 +38,10 @@ self: super: {
     };
   });
   hashable = haskellLib.addBuildDepend (self.callCabal2nix "hashable" (fetchFromGitHub {
-    owner = "luigy";
+    owner = "obsidiansystems";
     repo = "hashable";
-    rev = "97a6fc77b028b4b3a7310a5c2897b8611e518870";
-    sha256 = "1rl55p5y0mm8a7hxlfzhhgnnciw2h63ilxdaag3h7ypdx4bfd6rs";
+    rev = "1008a580f2dd3ebd4931e7d8cb36d1347a1e9dc6";
+    sha256 = "1zdd7qjv9k6332h4c6frjjfavknzzffw4ayv8q4f2zh9w774hzli";
   }) {}) self.text;
   conduit-extra = haskellLib.overrideCabal super.conduit-extra (drv: {
     src = "${fetchFromGitHub {
@@ -83,4 +67,5 @@ self: super: {
       self.ghcjs-base
     ];
   });
+  aeson = haskellLib.appendPatch super.aeson ./aeson.patch;
 }
