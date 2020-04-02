@@ -149,6 +149,17 @@ let iosSupport = system == "x86_64-darwin";
       ghcjs = nixpkgsFunc (nixpkgsArgs // {
         crossSystem = lib.systems.examples.ghcjs;
       });
+      wasm = nixpkgsFunc (nixpkgsArgs // {
+        stdenvStages = import ./webghc/cross.nix nixpkgs;
+        crossSystem = {
+          config = "wasm32-unknown-unknown-wasm";
+          arch = "wasm32";
+          libc = null;
+          useLLVM = true;
+          disableDynamicLinker = true;
+          thread-model = "single";
+        };
+      });
     };
 
     haskellLib = nixpkgs.haskell.lib;
@@ -204,6 +215,46 @@ let iosSupport = system == "x86_64-darwin";
   }))).override {
     overrides = nixpkgsCross.ghcjs.haskell.overlays.combined;
   };
+
+  wasm = ghcWasm32-8_6;
+  ghcWasm32-8_6 = makeRecursivelyOverridableBHPToo ((makeRecursivelyOverridable (nixpkgsCross.wasm.haskell.packages.ghcHEAD.override (old: {
+    ghc = (old.ghc.override {
+          enableShared = false;
+          enableRelocatedStaticLibs = false;
+          enableIntegerSimple = true;
+          enableTerminfo = false;
+          dontStrip = true;
+          dontUseLibFFIForAdjustors = true;
+          disableFFI = true;
+          version = "8.6.5";
+          # XXX remove
+          ghcFlavour = "quick-cross";
+          useLLVM = true;
+          buildLlvmPackages = nixpkgsCross.wasm.buildPackages.llvmPackages_8;
+          llvmPackages =      nixpkgsCross.wasm.buildPackages.llvmPackages_8;
+        }).overrideAttrs (drv: {
+          nativeBuildInputs = drv.nativeBuildInputs or []
+            ++ [nixpkgsCross.wasm.buildPackages.autoreconfHook nixpkgsCross.wasm.buildPackages.git];
+          src = fetchgit {
+            url = "https://github.com/WebGHC/ghc.git";
+            rev = "03d208c956d876eb5a2230308481aef69c4ebe4d";
+            sha256 = "1i07pk4w40a3qvgn6ymzr82q0fm6z0wqshrv1knqrv3szihfp9ir";
+            fetchSubmodules = true;
+          };
+          # Use this to test nix-build on your local GHC checkout.
+          # src = /path/to/ghc;
+          hardeningDisable = drv.hardeningDisable or []
+            ++ ["stackprotector"]
+            ++ ["pic"];
+          dontDisableStatic = true;
+          NIX_NO_SELF_RPATH=1;
+          # Disable parallel build, as ghc with splices support
+          # does not build correctly.
+          enableParallelBuilding = false;
+        });
+  }))).override {
+    overrides = nixpkgsCross.wasm.haskell.overlays.combined;
+  });
 
   ghc = ghc8_6;
   ghcHEAD = (makeRecursivelyOverridable nixpkgs.haskell.packages.ghcHEAD).override {
@@ -299,6 +350,7 @@ in let this = rec {
           iosAarch32
           iosAarch64
           iosWithHaskellPackages
+          wasm
           ;
 
   # Back compat
