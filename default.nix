@@ -227,8 +227,6 @@ let iosSupport = system == "x86_64-darwin";
           dontUseLibFFIForAdjustors = true;
           disableFFI = true;
           version = "8.6.5";
-          # XXX remove
-          ghcFlavour = "quick-cross";
           useLLVM = true;
           buildLlvmPackages = nixpkgsCross.wasm.buildPackages.llvmPackages_8;
           llvmPackages =      nixpkgsCross.wasm.buildPackages.llvmPackages_8;
