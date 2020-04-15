@@ -235,8 +235,8 @@ let iosSupport = system == "x86_64-darwin";
             ++ [nixpkgsCross.wasm.buildPackages.autoreconfHook nixpkgsCross.wasm.buildPackages.git];
           src = fetchgit {
             url = "https://github.com/WebGHC/ghc.git";
-            rev = "03d208c956d876eb5a2230308481aef69c4ebe4d";
-            sha256 = "1i07pk4w40a3qvgn6ymzr82q0fm6z0wqshrv1knqrv3szihfp9ir";
+            rev = "746a6e61c69f57ba6441a922bd7b6fe807b2dd2f";
+            sha256 = "0ghza2ix9lp5di7mgqzahlbxm9i0w4l10nxi99ls2n6xm2g231j3";
             fetchSubmodules = true;
           };
           # Use this to test nix-build on your local GHC checkout.
