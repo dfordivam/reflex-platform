@@ -8,7 +8,10 @@ let
 in self: super: {
   # _dep = super._dep or {} // localDeps;
   primitive = appendPatch super.primitive ./primitive.patch;
+  jsaddle-warp = null;
+  jsaddle-webkitgtk = null;
   jsaddle-webkit2gtk = null;
+  jsaddle-wkwebview = null;
   mkDerivation = args: super.mkDerivation (args // {
     dontStrip = true;
     enableSharedExecutables = false;
