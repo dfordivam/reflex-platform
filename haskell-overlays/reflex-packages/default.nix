@@ -42,7 +42,7 @@ in
     noGcTest = stdenv.hostPlatform.system != "x86_64-linux"
             || stdenv.hostPlatform != stdenv.buildPlatform
             || (ghc.isGhcjs or false);
-  in haskellLib.overrideCabal
+  in dontCheck (haskellLib.overrideCabal
     (self.callCabal2nixWithOptions "reflex-dom-core" (reflexDomRepo + "/reflex-dom-core") (lib.concatStringsSep " " (lib.concatLists [
       reflexOptimizerFlag
       useTemplateHaskellFlag
@@ -78,7 +78,7 @@ in
       preCheck = ''
         export FONTCONFIG_PATH=${nixpkgs.fontconfig.out}/etc/fonts
       '';
-    });
+    }));
 
   reflex-dom = haskellLib.overrideCabal
     (self.callCabal2nixWithOptions "reflex-dom" (reflexDomRepo + "/reflex-dom") (lib.concatStringsSep " " (lib.concatLists [
@@ -92,6 +92,11 @@ in
         self.android-activity
       ] ++ stdenv.lib.optionals (with stdenv.hostPlatform; isWasm && is32bit) [
         self.jsaddle-wasm
+      ];
+      patches = (drv.patches or []) ++ [
+        dep/reflex-dom-fixes-for-experimental-core2-branch.patch
+        dep/reflex-dom-fix-for-batching-of-requests.patch
+        dep/reflex-dom-fix-for-batching-of-responses.patch
       ];
     });
 
@@ -132,7 +137,7 @@ in
   # jsaddle-warp = dontCheck (addTestToolDepend (self.callCabal2nix "jsaddle-warp" "${jsaddleSrc}/jsaddle-warp" {}));
   jsaddle-warp = dontCheck (self.callCabal2nix "jsaddle-warp" (jsaddleSrc + /jsaddle-warp) {});
 
-  jsaddle-dom = self.callCabal2nix "jsaddle-dom" self._dep.jsaddle-dom {};
+  jsaddle-dom = dontCheck (appendPatch (self.callCabal2nix "jsaddle-dom" self._dep.jsaddle-dom {}) ./dep/jsaddle-dom-fix.patch);
   jsaddle-wasm = self.callCabal2nix "jsaddle-wasm" (hackGet (wasmCross + /jsaddle-wasm)) {};
   ghcjs-dom = self.callCabal2nix "ghcjs-dom" (self._dep.ghcjs-dom + "/ghcjs-dom") {};
   ghcjs-dom-jsaddle = self.callCabal2nix "ghcjs-dom-jsaddle" (self._dep.ghcjs-dom + "/ghcjs-dom-jsaddle") {};

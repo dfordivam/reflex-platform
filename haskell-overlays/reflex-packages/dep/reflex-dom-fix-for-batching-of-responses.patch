@@ -1,0 +1,13 @@
+diff --git a/src-android/Reflex/Dom/Android/MainWidget.hsc b/src-android/Reflex/Dom/Android/MainWidget.hsc
+index d2349e1..797cdf3 100644
+--- a/src-android/Reflex/Dom/Android/MainWidget.hsc
++++ b/src-android/Reflex/Dom/Android/MainWidget.hsc
+@@ -55,7 +55,7 @@ startMainWidget a url jsm = do
+         \     jsaddle.postMessage(JSON.stringify(a));\n\
+         \   }, function(a) {\n\
+         \     return JSON.parse(jsaddle.syncMessage(JSON.stringify(a)));\n\
+-        \ });\n\
++        \ }, 20);\n\
+         \ return function(batch) {\n\
+         \  core.processReq(batch);\n\
+         \ };\n\
