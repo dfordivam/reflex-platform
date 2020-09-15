@@ -1,7 +1,7 @@
 {
-  "owner": "ghcjs",
+  "owner": "obsidiansystems",
   "repo": "jsaddle-dom",
-  "branch": "master",
-  "rev": "da15a025eb06888cabf2e463b4f87ce14f65742b",
-  "sha256": "0rdwn3g2yy247am714xz3rid98d8j7ccjq8hhsp3mpvpf2w5ipmj"
+  "branch": "dn-jsaddle-core2",
+  "rev": "81ec60f47950f163b96b0e52d3d6cddda95ec4c0",
+  "sha256": "1rfxf7bcmz6njawqgnnbx77mp0xi4ha9f8hhlp1gbzcmx78brnbh"
 }
