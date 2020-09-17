@@ -158,7 +158,7 @@ rec {
     inherit thunkSet;
   };
 
-  wasm = import ./wasm;
+  wasm = import ./wasm { inherit haskellLib; };
 
   user-custom-pre = foldExtensions haskellOverlaysPre;
   user-custom-post = foldExtensions haskellOverlaysPost;
