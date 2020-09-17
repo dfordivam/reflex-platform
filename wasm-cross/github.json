@@ -1,8 +1,8 @@
 {
   "owner": "WebGHC",
   "repo": "wasm-cross",
-  "branch": "reflex-platform-integ",
+  "branch": "jsaddle-core2-1",
   "private": false,
-  "rev": "40f423d1fa562ebdc1643d78622f975d70f8c9f2",
-  "sha256": "0vpmkwfsdv1qj35hwylj4d7mi8aj725j83sziqipazb9d7iy64bh"
+  "rev": "5bbc0882d0d95f6d238d195f7d73ab00864d1108",
+  "sha256": "1a9vrpmghkv2k9xf4cyz3zwpicf1xxn729qdpmg7pmf5l2wxb533"
 }
