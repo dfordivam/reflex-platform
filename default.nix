@@ -113,8 +113,8 @@ let iosSupport = system == "x86_64-darwin";
 
     inherit (nixpkgs) lib fetchurl fetchgit fetchgitPrivate fetchFromGitHub fetchFromBitbucket;
 
-    wasmCross = nixpkgs.hackGet ./wasm-cross;
-    webGhcSrc = (import (wasmCross + /webghc.nix) { inherit fetchgit; }).ghc865SplicesSrc;
+    wasm-cross = nixpkgs.hackGet ./wasm-cross;
+    webGhcSrc = (import (wasm-cross + /webghc.nix) { inherit fetchgit; }).ghc865SplicesSrc;
     nixpkgsCross = {
       android = lib.mapAttrs (_: args: nixpkgsFunc (nixpkgsArgs // args)) rec {
         aarch64 = {
@@ -152,7 +152,7 @@ let iosSupport = system == "x86_64-darwin";
         crossSystem = lib.systems.examples.ghcjs;
       });
       wasm = nixpkgsFunc (nixpkgsArgs //
-        (import wasmCross { inherit nixpkgsFunc; }).nixpkgsCrossArgs webGhcSrc "8.6.5"
+        (import wasm-cross { inherit nixpkgsFunc; }).nixpkgsCrossArgs webGhcSrc "8.6.5"
       );
     };
 
@@ -313,7 +313,7 @@ in let this = rec {
           iosAarch64
           iosWithHaskellPackages
           wasm
-          wasmCross
+          wasm-cross
           ;
 
   # Back compat
@@ -415,8 +415,8 @@ in let this = rec {
     args: # Others options to pass to build-wasm-app
   let
     pkg = wasm.callPackage pkgPath {};
-    webabi = nixpkgs.callPackage (wasmCross + /webabi) {};
-    build-wasm-app = nixpkgs.callPackage (wasmCross + /build-wasm-app.nix) ({ inherit webabi; } // args);
+    webabi = nixpkgs.callPackage (wasm-cross + /webabi) {};
+    build-wasm-app = nixpkgs.callPackage (wasm-cross + /build-wasm-app.nix) ({ inherit webabi; } // args);
   in build-wasm-app {
     inherit pkg ename;
   };
