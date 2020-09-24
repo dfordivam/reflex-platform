@@ -411,10 +411,9 @@ in let this = rec {
   # Useful in building simple cabal projects like reflex-todomvc
   build-wasm-app-wrapper =
     ename: # Name of the executable, usually same as cabal project name
-    pkgPath : # Path of cabal package
+    pkg : # cabal package, compiled via wasm
     args: # Others options to pass to build-wasm-app
   let
-    pkg = wasm.callPackage pkgPath {};
     webabi = nixpkgs.callPackage (wasm-cross + /webabi) {};
     build-wasm-app = nixpkgs.callPackage (wasm-cross + /build-wasm-app.nix) ({ inherit webabi; } // args);
   in build-wasm-app {
